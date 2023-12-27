@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <router-view></router-view>
+  <p style="height: 100vh">Body</p>
 </template>
 
 <style scoped></style>
