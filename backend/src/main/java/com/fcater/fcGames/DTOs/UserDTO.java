@@ -1,6 +1,7 @@
 package com.fcater.fcGames.DTOs;
 
 import com.fcater.fcGames.entities.User;
+import com.fcater.fcGames.utils.Auth;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,6 +24,6 @@ public class UserDTO {
         this.username = user.getUsername();
         this.isAdmin = user.getIsAdmin();
         this.accountBalance = user.getAccountBalance();
-        this.token = user.generateToken();
+        this.token = Auth.generateToken(user);
     }
 }

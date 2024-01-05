@@ -36,15 +36,15 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<?> createUser(User user) {
+        user.setIsAdmin(getAllUsers().isEmpty());
         var i = userMapper.insert(user);
         return i > 0
                 ? ResponseEntity.ok(new UserDTO(user))
                 : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("用户创建失败");
-
     }
 
     @PatchMapping("/user/{id}")
-    public UserDTO updateUserById(@PathVariable int id, @NotNull User user) {
+    public UserDTO updateUserById(@PathVariable int id, @NotNull @RequestBody User user) {
         user.setId(id);
         var origin = userMapper.selectById(id);
         if (!origin.getIsAdmin()) {

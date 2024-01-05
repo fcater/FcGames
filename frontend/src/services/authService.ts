@@ -1,44 +1,26 @@
-import { ElNotification } from "element-plus";
-import { LoginForm } from "../types/LoginForm";
-import http from "./httpService";
-import router from "../router";
 import multiavatar from "@multiavatar/multiavatar";
 
-const userInfoKey = "userInfo";
+import http from "./httpService";
+import { LoginForm } from "../types/LoginForm";
+import localStorageKeys from "../constants/localStorageKeys";
+
 const BASE_URL = "http://localhost:8080";
-const LOGIN_URL = BASE_URL + "/login";
-const REGISTER_URL = BASE_URL + "/register";
 
-const login = async (form: LoginForm, url = LOGIN_URL, msg = "登陆成功！") => {
-  try {
-    const { data } = await http.post(url, form);
-    http.setJwt(data.token);
-    localStorage.setItem(userInfoKey, JSON.stringify(data));
+const login = (form: LoginForm) => http.post(BASE_URL + "/login", form);
 
-    ElNotification({ title: msg, type: "success", position: "top-left" });
-    router.push("/");
-  } catch (error: any) {
-    console.log(error?.response?.data);
-    throw error?.response?.data;
-  }
-};
+const register = (form: LoginForm) => http.post(BASE_URL + "/register", form);
 
-const register = async (form: LoginForm) =>
-  login(form, REGISTER_URL, "注册成功");
-
-const logout = () => {
-  localStorage.removeItem(userInfoKey);
-  ElNotification({ title: "已退出", type: "success", position: "top-left" });
-  router.push("/login");
-};
+const logout = () => localStorage.removeItem(localStorageKeys.USER);
 
 const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem(userInfoKey) || "{}");
+  return JSON.parse(localStorage.getItem(localStorageKeys.USER) || "{}");
 };
 
 const getJwt = () => {
-  return JSON.parse(localStorage.getItem(userInfoKey) || "{}")?.token;
+  return JSON.parse(localStorage.getItem(localStorageKeys.USER) || "{}")?.token;
 };
+
+http.setJwt(getJwt());
 
 const avatars = [
   "Xbox",

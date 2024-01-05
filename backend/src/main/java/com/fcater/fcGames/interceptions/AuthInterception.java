@@ -1,13 +1,13 @@
 package com.fcater.fcGames.interceptions;
 
-import com.fcater.fcGames.utils.JWT;
+import com.fcater.fcGames.utils.Auth;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthInterception implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(
@@ -16,14 +16,14 @@ public class AuthInterceptor implements HandlerInterceptor {
             @NotNull Object handler
     ) {
         String token = request.getHeader("Authorization");
-
-        // TODO: 记得移掉这行代码，否则权限校验会失效
-//        if (token == null) return true;
-        if (JWT.isValidJWT(token)) {
+        try {
+            Auth.parseToken(token);
             return true;
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } catch (Exception e) {
+            Auth.sendUnauthorizedResponse(response, "未授权用户！");
             return false;
         }
     }
+
+
 }

@@ -1,7 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Header, Footer } from "./components/Layout";
+</script>
 
 <template>
-  <router-view></router-view>
+  <Header />
+  <router-view />
+  <Footer />
 </template>
 
 <style scoped></style>
