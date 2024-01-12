@@ -1,4 +1,11 @@
-import { authHandlers } from "./handlers/auth";
-import { userHandlers } from "./handlers/user";
+import {
+  authHandlers,
+  userHandlers,
+  gameHandlers,
+  fileHandlers,
+} from "./handlers/index";
 
-export const handlers = authHandlers.concat(userHandlers);
+export const handlers = authHandlers
+  .concat(userHandlers)
+  .concat(gameHandlers)
+  .concat(fileHandlers);

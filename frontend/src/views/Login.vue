@@ -2,7 +2,7 @@
   <div class="loginBackround">
     <Logo />
     <h6>登录或注册</h6>
-    <el-form :model="form" label-width="65px">
+    <el-form :model="form" label-width="65px" @keydown="handleFormKeydown">
       <el-form-item label="用户名" required>
         <el-input v-model="form.username" id="username" />
       </el-form-item>
@@ -48,13 +48,17 @@ import { AxiosResponse } from "axios";
 
 import Logo from "../assets/Logo.vue";
 import authService from "../services/authService";
-import { ElNotification } from "element-plus";
 import localStorageKeys from "../constants/localStorageKeys";
-import { LoginForm } from "../types/LoginForm";
+import { LoginForm } from "../types";
 import { AUTH_MESSAGE_TIME } from "../constants/delay";
+import toast from "../constants/toast";
 
 const form = reactive({ username: "", password: "" });
 const errorMessage = ref("");
+
+const isFormValid = computed(() => {
+  return form.username !== "" && form.password !== "";
+});
 
 watch(form, () => (errorMessage.value = ""));
 
@@ -66,7 +70,7 @@ const handleAPI = async (
   try {
     const { data: user } = await api(form);
     localStorage.setItem(localStorageKeys.USER, JSON.stringify(user));
-    ElNotification({ title, type: "success", position: "top-left" });
+    toast.success(title);
     setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
   } catch (error: any) {
     errorMessage.value = error?.response?.data;
@@ -77,9 +81,9 @@ const onLogin = () => handleAPI(authService.login, form, "登陆成功");
 
 const onRegister = () => handleAPI(authService.register, form, "注册成功");
 
-const isFormValid = computed(() => {
-  return form.username !== "" && form.password !== "";
-});
+const handleFormKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter") onLogin();
+};
 </script>
 
 <style scoped>

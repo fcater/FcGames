@@ -1,7 +1,10 @@
 import axios from "axios";
-import { ElNotification } from "element-plus";
+
 import router from "../router";
+import toast from "../constants/toast";
 import BASE_URL from "../constants/baseURL";
+import localStorageKeys from "../constants/localStorageKeys";
+import { AUTH_MESSAGE_TIME } from "../constants/delay";
 
 const instance = axios.create({ baseURL: BASE_URL.API });
 
@@ -12,12 +15,14 @@ instance.interceptors.response.use(null, (error) => {
   if (!expectedError) console.error(error);
 
   if (error.response?.status === 401 && window.location.hash !== "#/login") {
-    ElNotification({
-      title: error?.response?.data?.message,
-      type: "warning",
-      position: "top-left",
-    });
+    toast.warning(error?.response?.data?.message);
     router.push("/");
+  }
+
+  if (error.response?.status === 401 && window.location.hash === "#/home") {
+    toast.warning(error?.response?.data?.message);
+    localStorage.removeItem(localStorageKeys.USER);
+    setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
   }
 
   return Promise.reject(error);
@@ -28,6 +33,7 @@ const setJwt = (jwt: string) => {
 };
 
 export default {
+  instance,
   get: instance.get,
   post: instance.post,
   put: instance.put,

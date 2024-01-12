@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import ElementPlus from "element-plus";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
@@ -9,6 +10,7 @@ import "element-plus/dist/index.css";
 import "./style.css";
 
 const app = createApp(App);
+const pinia = createPinia();
 
 for (const [name, comp] of Object.entries(ElementPlusIconsVue)) {
   app.component(name, comp);
@@ -21,5 +23,5 @@ const enableMocking = async () => {
 };
 
 enableMocking().then(() => {
-  app.use(router).use(ElementPlus).mount("#app");
+  app.use(pinia).use(router).use(ElementPlus).mount("#app");
 });

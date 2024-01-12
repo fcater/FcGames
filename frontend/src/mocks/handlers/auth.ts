@@ -1,5 +1,5 @@
 import { HttpResponse, http } from "msw";
-import { User } from "../../types/User";
+import { User } from "../../types";
 import BASE_URL from "../../constants/baseURL";
 
 const ADMIN = {

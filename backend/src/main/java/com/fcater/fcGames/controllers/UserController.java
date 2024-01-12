@@ -18,8 +18,6 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    private String authHeader;
-
     @GetMapping("/user")
     public List<UserDTO> getAllUsers() {
         return userMapper.selectList(null)
@@ -28,14 +26,16 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-
     @GetMapping("/user/{id}")
-    public UserDTO getUserById(@PathVariable int id) {
-        return new UserDTO(userMapper.selectById(id));
+    public ResponseEntity<?> getUserById(@PathVariable int id) {
+        var user = userMapper.selectById(id);
+        return user != null
+                ? ResponseEntity.ok(new UserDTO(user))
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID为" + id + "的用户不存在");
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> createUser(User user) {
+    public ResponseEntity<?> createUser(@NotNull User user) {
         user.setIsAdmin(getAllUsers().isEmpty());
         var i = userMapper.insert(user);
         return i > 0
@@ -44,19 +44,27 @@ public class UserController {
     }
 
     @PatchMapping("/user/{id}")
-    public UserDTO updateUserById(@PathVariable int id, @NotNull @RequestBody User user) {
+    public ResponseEntity<?> updateUserById(@PathVariable int id, @NotNull @RequestBody User user) {
         user.setId(id);
         var origin = userMapper.selectById(id);
-        if (!origin.getIsAdmin()) {
-            user.setIsAdmin(false);
-        }
+        if (!origin.getIsAdmin()) user.setIsAdmin(false);
+
         var i = userMapper.updateById(user);
-        return i > 0 ? new UserDTO(user) : null;
+        return switch (i) {
+            case 0 -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID为" + id + "的用户不存在");
+            case 1 -> ResponseEntity.ok(new UserDTO(userMapper.selectById(id)));
+            default -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("更新失败");
+        };
     }
 
     @DeleteMapping("/user/{id}")
-    public String deleteUserById(@PathVariable int id) {
+    public ResponseEntity<String> deleteUserById(@PathVariable int id) {
+
         int i = userMapper.deleteById(id);
-        return i > 0 ? "删除成功" : "删除失败";
+        return switch (i) {
+            case 0 -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID为" + id + "的游戏不存在");
+            case 1 -> ResponseEntity.ok("删除成功");
+            default -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("删除失败");
+        };
     }
 }

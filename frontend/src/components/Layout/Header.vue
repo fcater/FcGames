@@ -22,11 +22,11 @@
 
 <script setup lang="ts">
 import multiavatar from "@multiavatar/multiavatar";
-import { ElNotification } from "element-plus";
 
 import router from "../../router";
 import Logo from "../../assets/Logo.vue";
 import authService from "../../services/authService";
+import toast from "../../constants/toast";
 import { AUTH_MESSAGE_TIME } from "../../constants/delay";
 
 const user = authService.getCurrentUser();
@@ -36,7 +36,7 @@ const gotoHOme = () => router.push("/home");
 
 const onLogout = () => {
   authService.logout();
-  ElNotification({ title: "已退出", type: "success", position: "top-left" });
+  toast.success("已退出");
   setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
 };
 </script>

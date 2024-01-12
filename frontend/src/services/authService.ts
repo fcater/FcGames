@@ -1,7 +1,7 @@
 import multiavatar from "@multiavatar/multiavatar";
 
 import http from "./httpService";
-import { LoginForm } from "../types/LoginForm";
+import { LoginForm } from "../types";
 import localStorageKeys from "../constants/localStorageKeys";
 
 const BASE_URL = "http://localhost:8080";

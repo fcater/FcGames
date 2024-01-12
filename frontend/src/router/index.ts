@@ -5,12 +5,14 @@ import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
 import NotFound from "../views/NotFound.vue";
 import ManageUsers from "../views/ManageUsers.vue";
+import GameInfoVue from "../views/GameInfo.vue";
 
 const routes = [
   { path: "/", redirect: "home" },
   { path: "/home", component: Home },
   { path: "/users", component: ManageUsers },
   { path: "/login", component: Login },
+  { path: "/game", component: GameInfoVue },
   { path: "/:catchAll(.*)", component: NotFound },
 ];
 

@@ -1,1 +1,4 @@
-export { authHandlers } from "./auth";
+export * from "./auth";
+export * from "./user";
+export * from "./game";
+export * from "./file";

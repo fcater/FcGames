@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 import BASE_URL from "../../constants/baseURL";
-import { User } from "../../types/User";
+import { User } from "../../types";
 
 const USERS = [
   {

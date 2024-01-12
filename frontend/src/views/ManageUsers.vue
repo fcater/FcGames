@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 
-import { User } from "../types/User";
+import { User } from "../types";
 import httpService from "../services/httpService";
 import DeleteDialog from "../components/ManageUsers/DeleteDialog.vue";
 import RechargeDialog from "../components/ManageUsers/RechargeDialog.vue";

@@ -3,7 +3,7 @@
     @close="closeDialog"
     v-model="showDialog"
     title="充值"
-    width="30%"
+    width="30rem"
     align-center
   >
     <h2 class="currentUser">{{ currentUserTitle }}</h2>
@@ -36,8 +36,8 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref, watchEffect } from "vue";
-import { ElNotification } from "element-plus";
 
+import toast from "../../constants/toast";
 import httpService from "../../services/httpService";
 import { DIALOG_FADE_OUT_TIME } from "../../constants/delay";
 
@@ -66,18 +66,10 @@ const handleRechageUser = async () => {
   const body = { accountBalance: estimatedAmount.value };
   try {
     await httpService.patch(`api/user/${props.rechargeUser.id}`, body);
-    ElNotification({
-      title: "充值成功！",
-      type: "success",
-      position: "top-left",
-    });
+    toast.success("删除成功");
     emit("onFetchUsers");
   } catch (error: any) {
-    ElNotification({
-      title: "充值失败: " + error?.response?.data?.message || "",
-      type: "warning",
-      position: "top-left",
-    });
+    toast.failed("删除失败", error);
   } finally {
     closeDialog();
   }
