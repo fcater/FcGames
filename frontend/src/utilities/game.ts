@@ -7,7 +7,7 @@ const getGameDiscount = (discount: number): number | null => {
 };
 
 const getGamePoster = (posterPath: string): string => {
-  return posterPath ? BASE_URL.API + posterPath : "/public/defaultPoster.jpg";
+  return posterPath ? BASE_URL.API + posterPath : "/defaultPoster.jpg";
 };
 
 const getCategoriesValue = (category: string): string => {

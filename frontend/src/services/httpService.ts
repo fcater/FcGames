@@ -21,7 +21,7 @@ instance.interceptors.response.use(null, (error) => {
 
   if (error.response?.status === 401 && window.location.hash === "#/home") {
     toast.warning(error?.response?.data?.message);
-    localStorage.removeItem(localStorageKeys.USER);
+    localStorage.removeItem(localStorageKeys.TOKEN);
     setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
   }
 

@@ -1,3 +1,3 @@
-const USER = "userInfo";
+const TOKEN = "token";
 
-export default { USER };
+export default { TOKEN };

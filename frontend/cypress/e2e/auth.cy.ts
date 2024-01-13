@@ -76,13 +76,13 @@ describe("auth", () => {
       cy.get("#password").type("admin");
       cy.get(".login").click();
       cy.window().then((window) => {
-        expect(window.localStorage.getItem("userInfo")).not.to.equal(null);
+        expect(window.localStorage.getItem("token")).not.to.equal(null);
       });
       cy.get(".user-header").click();
       cy.get("[role='menuitem']").last().click();
       cy.url().should("include", "/login");
       cy.window().then((window) => {
-        expect(window.localStorage.getItem("userInfo")).to.equal(null);
+        expect(window.localStorage.getItem("token")).to.equal(null);
       });
     });
   });

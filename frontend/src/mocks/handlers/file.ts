@@ -2,10 +2,10 @@ import { HttpResponse, http } from "msw";
 import BASE_URL from "../../constants/baseURL";
 
 export const fileHandlers = [
-  http.get("/public/defaultPoster.jpg", () => {}),
-  http.get("/public/mockPoster.jpg", () => {}),
+  http.get("defaultPoster.jpg", () => {}),
+  http.get("mockPoster.jpg", () => {}),
   http.get(BASE_URL.API + "poster/:poster", async () => {
-    const buffer = await fetch("/public/mockPoster.jpg").then((response) =>
+    const buffer = await fetch("mockPoster.jpg").then((response) =>
       response.arrayBuffer()
     );
     return HttpResponse.arrayBuffer(buffer, {

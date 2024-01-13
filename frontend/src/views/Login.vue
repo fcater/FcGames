@@ -68,8 +68,8 @@ const handleAPI = async (
   title: string
 ) => {
   try {
-    const { data: user } = await api(form);
-    localStorage.setItem(localStorageKeys.USER, JSON.stringify(user));
+    const { data: token } = await api(form);
+    localStorage.setItem(localStorageKeys.TOKEN, token);
     toast.success(title);
     setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
   } catch (error: any) {

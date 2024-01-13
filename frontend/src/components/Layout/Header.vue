@@ -1,44 +1,46 @@
 <template>
-  <header v-if="user?.token" class="header">
-    <Logo class="header-logo" @click="gotoHOme" />
+  <header v-if="currentUser.username" class="header">
+    <Logo class="header-logo" @click="gotoHome" />
     <span class="divider" />
-    <span class="store" @click="gotoHOme"> STORE </span>
+    <span class="store" @click="gotoHome"> STORE </span>
     <el-dropdown class="user-header">
-      <span class="avatar" v-html="avatar" />
+      <span class="avatar" v-html="multiavatar(currentUser.username)" />
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>{{ user?.username }}</el-dropdown-item>
-          <el-dropdown-item v-if="user?.isAdmin" @click="gotoManageUsers">
+          <el-dropdown-item>{{ currentUser.username }}</el-dropdown-item>
+          <el-dropdown-item v-if="currentUser.isAdmin" @click="gotoManageUsers">
             管理用户
           </el-dropdown-item>
           <el-dropdown-item @click="onLogout"> 退出登录 </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-
-    <el-button type="primary">下载</el-button>
+    <el-button @click="currentUser.fetchUser()" type="primary">下载</el-button>
   </header>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import multiavatar from "@multiavatar/multiavatar";
 
 import router from "../../router";
 import Logo from "../../assets/Logo.vue";
-import authService from "../../services/authService";
 import toast from "../../constants/toast";
+import authService from "../../services/authService";
+import { useCurrentUser } from "../../store/currentUser";
 import { AUTH_MESSAGE_TIME } from "../../constants/delay";
 
-const user = authService.getCurrentUser();
-const avatar = multiavatar(user.username || "");
-const gotoManageUsers = () => router.push("/users");
-const gotoHOme = () => router.push("/home");
+const currentUser = useCurrentUser();
 
+const gotoManageUsers = () => router.push("/users");
+const gotoHome = () => router.push("/home");
 const onLogout = () => {
   authService.logout();
   toast.success("已退出");
   setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
 };
+
+onMounted(() => currentUser.fetchUser());
 </script>
 
 <style scoped>

@@ -5,7 +5,6 @@ import com.fcater.fcGames.DTOs.GameDTO;
 import com.fcater.fcGames.entities.Game;
 import com.fcater.fcGames.enums.GameCategories;
 import com.fcater.fcGames.mappers.GameMapper;
-import org.apache.ibatis.jdbc.Null;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +23,11 @@ public class GameController {
     private GameMapper gameMapper;
 
     @GetMapping("/games")
-    public List<GameDTO> getAllGames(@RequestParam(required = false) String categories) {
+    public List<GameDTO> getAllGames(@RequestParam(required = false) String categories, @RequestParam(required = false) String titleLike) {
         QueryWrapper<Game> queryWrapper = new QueryWrapper<>();
         List<String> _categories = categories == null ? Collections.emptyList() : Arrays.asList(categories.split(","));
+
+        if (titleLike != null) queryWrapper.like("title", titleLike);
         if (!_categories.isEmpty()) queryWrapper.in("categories", _categories);
 
         return gameMapper.selectList(queryWrapper)

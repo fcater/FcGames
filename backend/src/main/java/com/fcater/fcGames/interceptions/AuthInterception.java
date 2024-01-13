@@ -24,6 +24,4 @@ public class AuthInterception implements HandlerInterceptor {
             return false;
         }
     }
-
-
 }

@@ -33,10 +33,15 @@ const states = useGameListStates();
 const handleManageGame = (game: Game) => (manageGame.value = game);
 
 const fetchGames = () => {
-  const query = states.category ? `?categories=${states.category}` : "";
+  const queries = [
+    states.searchTitle ? `titleLike=${states.searchTitle}` : "",
+    states.category ? `categories=${states.category}` : "",
+  ].filter(Boolean);
+  const queryString = queries.length > 0 ? "?" + queries.join("&") : "";
+
   loading.value = true;
   httpService
-    .get(`api/games${query}`)
+    .get(`api/games${queryString}`)
     .then(({ data }) => (games.value = data))
     .catch((error) => console.error("获取失败:", error))
     .finally(() => (loading.value = false));

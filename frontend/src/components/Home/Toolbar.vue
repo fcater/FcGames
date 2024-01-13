@@ -1,8 +1,13 @@
 <template>
   <div class="toolbar">
-    <el-input v-model="search" placeholder="搜索商城" class="search">
+    <el-input
+      v-model="search"
+      placeholder="搜索商城"
+      class="search"
+      @keydown="handleSearchKeydown"
+    >
       <template #prepend size="30">
-        <el-button :icon="Search" />
+        <el-button :icon="Search" @click="handleSearch" />
       </template>
     </el-input>
     <el-switch
@@ -29,6 +34,7 @@
         {{ states.manageMode ? "退出" : "管理游戏" }}
       </p>
     </el-button>
+    <!-- <el-icon><ShoppingBag /></el-icon> -->
   </div>
 </template>
 
@@ -36,13 +42,17 @@
 import { ref } from "vue";
 import { Grid, Expand } from "@element-plus/icons-vue";
 import { Search } from "@element-plus/icons-vue";
-import authService from "../../services/authService";
 import { useGameListStates } from "../../store/gameListStates";
+import { useCurrentUser } from "../../store/currentUser";
 
 const search = ref("");
 const states = useGameListStates();
+const currentUser = useCurrentUser();
 
-const currentUser = authService.getCurrentUser();
+const handleSearch = () => states.setSearchTitle(search.value);
+const handleSearchKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Enter") handleSearch();
+};
 </script>
 
 <style scoped>
