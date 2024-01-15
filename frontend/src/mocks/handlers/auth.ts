@@ -3,7 +3,7 @@ import { User } from "../../types";
 import BASE_URL from "../../constants/baseURL";
 import authService from "../../services/authService";
 
-const ADMIN = {
+export const ADMIN = {
   id: 0,
   username: "admin",
   accountBalance: 0,
@@ -11,7 +11,7 @@ const ADMIN = {
   token: "mockToken",
 };
 
-const USER = {
+export const USER = {
   id: 1,
   username: "fcater",
   accountBalance: 0,

@@ -50,7 +50,7 @@ import Logo from "../assets/Logo.vue";
 import authService from "../services/authService";
 import localStorageKeys from "../constants/localStorageKeys";
 import { LoginForm } from "../types";
-import { AUTH_MESSAGE_TIME } from "../constants/delay";
+import { MESSAGE_TIME } from "../constants/delay";
 import toast from "../constants/toast";
 
 const form = reactive({ username: "", password: "" });
@@ -71,7 +71,7 @@ const handleAPI = async (
     const { data: token } = await api(form);
     localStorage.setItem(localStorageKeys.TOKEN, token);
     toast.success(title);
-    setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
+    setTimeout(() => (location.href = "/"), MESSAGE_TIME);
   } catch (error: any) {
     errorMessage.value = error?.response?.data;
   }

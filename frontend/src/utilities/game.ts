@@ -6,7 +6,7 @@ const getGameDiscount = (discount: number): number | null => {
   return discount <= 1 ? discount * 100 : null;
 };
 
-const getGamePoster = (posterPath: string): string => {
+const getGamePoster = (posterPath: string | undefined): string => {
   return posterPath ? BASE_URL.API + posterPath : "/defaultPoster.jpg";
 };
 

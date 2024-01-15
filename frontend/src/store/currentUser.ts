@@ -1,4 +1,6 @@
 import { defineStore } from "pinia";
+
+import { Game } from "../types";
 import httpService from "../services/httpService";
 import authService from "../services/authService";
 
@@ -9,12 +11,14 @@ export const useCurrentUser = defineStore({
     username: "",
     isAdmin: false,
     accountBalance: 0,
+    games: [] as Number[],
   }),
   actions: {
     async fetchUser() {
       if (authService.getJwt()) {
-        const { data } = await httpService.get("/api/parseToken");
-        this.$patch({ ...data });
+        const { data: user } = await httpService.get("/api/parseToken");
+        const { data } = await httpService.get(`/api/userGames/${user.id}`);
+        this.$patch({ ...user, games: data.map((g: Game) => g.id) });
       }
     },
   },

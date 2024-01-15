@@ -41,7 +41,7 @@ const fetchGames = () => {
 
   loading.value = true;
   httpService
-    .get(`api/games${queryString}`)
+    .get(`api/game${queryString}`)
     .then(({ data }) => (games.value = data))
     .catch((error) => console.error("获取失败:", error))
     .finally(() => (loading.value = false));

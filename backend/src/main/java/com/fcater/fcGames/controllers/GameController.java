@@ -22,7 +22,7 @@ public class GameController {
     @Autowired
     private GameMapper gameMapper;
 
-    @GetMapping("/games")
+    @GetMapping("/game")
     public List<GameDTO> getAllGames(@RequestParam(required = false) String categories, @RequestParam(required = false) String titleLike) {
         QueryWrapper<Game> queryWrapper = new QueryWrapper<>();
         List<String> _categories = categories == null ? Collections.emptyList() : Arrays.asList(categories.split(","));
@@ -36,7 +36,7 @@ public class GameController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/games/categories")
+    @GetMapping("/game/categories")
     public GameCategories[] getAllGameCategories() {
         return GameCategories.values();
     }
@@ -49,7 +49,7 @@ public class GameController {
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID为" + id + "的游戏不存在");
     }
 
-    @PostMapping("/games/add")
+    @PostMapping("/game/add")
     public ResponseEntity<?> addGame(@RequestBody Game game) {
         var i = gameMapper.insert(game);
         return i > 0

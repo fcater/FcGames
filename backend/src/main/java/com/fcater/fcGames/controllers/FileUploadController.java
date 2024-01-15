@@ -28,14 +28,14 @@ public class FileUploadController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") @NotNull MultipartFile file) {
         try {
-            String filename = UUID.randomUUID() + "_" + Objects.requireNonNull(file.getOriginalFilename());
-            String staticPath = resourceLoader.getResource("classpath:static/").getFile().getAbsolutePath();
-            String path = staticPath + "/gamePoster/" + filename;
+            var filename = UUID.randomUUID() + "_" + Objects.requireNonNull(file.getOriginalFilename());
+            var staticPath = resourceLoader.getResource("classpath:").getFile().getAbsolutePath();
+            var path = staticPath + "/static/gamePoster/";
 
-            File directory = new File(staticPath + "/gamePoster/");
+            var directory = new File(path);
             if (!directory.exists()) directory.mkdirs();
 
-            file.transferTo(new File(path));
+            file.transferTo(new File(path + filename));
             return new ResponseEntity<>("gamePoster/" + filename, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>("上传失败: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

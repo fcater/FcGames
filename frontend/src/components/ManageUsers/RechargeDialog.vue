@@ -66,10 +66,10 @@ const handleRechageUser = async () => {
   const body = { accountBalance: estimatedAmount.value };
   try {
     await httpService.patch(`api/user/${props.rechargeUser.id}`, body);
-    toast.success("删除成功");
+    toast.success("充值成功");
     emit("onFetchUsers");
   } catch (error: any) {
-    toast.failed("删除失败", error);
+    toast.failed("充值失败", error);
   } finally {
     closeDialog();
   }

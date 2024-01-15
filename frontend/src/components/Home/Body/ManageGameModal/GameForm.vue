@@ -86,7 +86,7 @@ const canSubmit = computed(() => {
 });
 
 const [createGame, updateGame] = [
-  (body: Game) => httpService.post("api/games/add", body),
+  (body: Game) => httpService.post("api/game/add", body),
   (body: Game) => httpService.patch(`api/game/${props.game.id}`, body),
 ];
 

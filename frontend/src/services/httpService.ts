@@ -4,7 +4,7 @@ import router from "../router";
 import toast from "../constants/toast";
 import BASE_URL from "../constants/baseURL";
 import localStorageKeys from "../constants/localStorageKeys";
-import { AUTH_MESSAGE_TIME } from "../constants/delay";
+import { MESSAGE_TIME } from "../constants/delay";
 
 const instance = axios.create({ baseURL: BASE_URL.API });
 
@@ -22,7 +22,7 @@ instance.interceptors.response.use(null, (error) => {
   if (error.response?.status === 401 && window.location.hash === "#/home") {
     toast.warning(error?.response?.data?.message);
     localStorage.removeItem(localStorageKeys.TOKEN);
-    setTimeout(() => (location.href = "/"), AUTH_MESSAGE_TIME);
+    setTimeout(() => (location.href = "/"), MESSAGE_TIME);
   }
 
   return Promise.reject(error);

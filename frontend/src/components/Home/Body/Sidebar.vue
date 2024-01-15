@@ -36,7 +36,7 @@ const handleTabChange = (tabName: string) => {
 
 onMounted(() => {
   httpService
-    .get("api/games/categories")
+    .get("api/game/categories")
     .then(({ data }) => (gameCategories.value = data))
     .catch((error) => console.error("获取失败:", error));
 });

@@ -1,22 +1,12 @@
 import { HttpResponse, http } from "msw";
-import BASE_URL from "../../constants/baseURL";
+
+import { ADMIN, USER } from "./auth";
 import { User } from "../../types";
+import BASE_URL from "../../constants/baseURL";
 
 const USERS = [
-  {
-    id: 0,
-    username: "admin",
-    accountBalance: 0,
-    isAdmin: true,
-    token: "mockToken",
-  },
-  {
-    id: 1,
-    username: "fcater",
-    accountBalance: 0,
-    isAdmin: false,
-    token: "mockToken",
-  },
+  ADMIN,
+  USER,
   {
     id: 2,
     username: "frank",

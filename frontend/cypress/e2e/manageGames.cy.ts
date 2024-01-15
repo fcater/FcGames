@@ -30,7 +30,7 @@ describe("manageGames", () => {
 
   describe("get games", () => {
     it("should get all games", () => {
-      cy.get(".card").should("have.length", 2);
+      cy.get(".card").should("have.length", 3);
     });
 
     it("should get all game categories", () => {
@@ -43,21 +43,14 @@ describe("manageGames", () => {
       cy.get("#tab-PUZZLE").click();
       cy.get(".card").should("have.length", 1);
       cy.get("#tab-all").click();
-      cy.get(".card").should("have.length", 2);
-    });
-
-    it("should view games as chart or list", () => {
-      cy.get(".el-switch__core").click();
-      cy.get(".description").should("exist");
-      cy.get(".el-switch__core").click();
-      cy.get(".description").should("not.exist");
+      cy.get(".card").should("have.length", 3);
     });
   });
 
   describe("create a game", () => {
     it("should be able to create a new game", () => {
       modifyGame();
-      cy.get(".card").eq(2).click();
+      cy.get(".card").eq(3).click();
       expectedGame();
     });
   });
@@ -72,12 +65,12 @@ describe("manageGames", () => {
 
   describe("delete a game", () => {
     it("should be able to delete a game", () => {
-      cy.get(".card").should("have.length", 2);
+      cy.get(".card").should("have.length", 3);
       cy.get("#manageMode").click();
       cy.get(".card").eq(1).click();
       cy.get(".delete-game-button").click();
       cy.get(".el-popconfirm__action").find("button").eq(1).click();
-      cy.get(".card").should("have.length", 1);
+      cy.get(".card").should("have.length", 2);
     });
   });
 });

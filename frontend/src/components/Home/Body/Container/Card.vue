@@ -1,19 +1,20 @@
 <template>
-  <el-card
-    class="card"
-    @click="handleClickCard"
-    :style="{ width: states.viewChart ? '' : '100%' }"
-  >
+  <el-card class="card" :style="{ width: showList ? '100%' : '' }">
     <img
       :src="getGamePoster(props.game.poster)"
       class="image"
       :style="{
-        width: states.viewChart ? '100%' : '8rem',
-        height: states.viewChart ? '14rem' : '4rem',
-        marginRight: states.viewChart ? '0' : '1rem',
+        width: showList ? '8rem' : '100%',
+        height: showList ? '4rem' : '14rem',
+        marginRight: showList ? '1rem' : '0',
       }"
+      @click="redirectToGameDetails"
     />
-    <div class="text">
+    <div
+      class="text"
+      :style="{ color: props.showList ? '#999' : '#fff' }"
+      @click="redirectToGameDetails"
+    >
       <p>{{ props.game.title }}</p>
       <div class="sub-title">
         <PriceLabel :game="props.game" />
@@ -21,48 +22,97 @@
     </div>
     <div
       class="description"
-      v-if="!states.viewChart"
-      :style="{ height: states.viewChart ? '100%' : '4rem' }"
+      v-if="!props.showList && !states.viewChart"
+      :style="{ height: showList ? '4rem' : '100%' }"
+      @click="handleCart"
     >
       {{ game.description }}
     </div>
-    <div class="actions">
-      <el-button v-if="states.manageMode" type="warning" :icon="Edit" circle />
+    <div class="actions" v-if="!currentUser.games.includes(props.game.id)">
       <el-button
-        v-else
-        type="info"
-        :icon="ShoppingCart"
+        v-if="states.manageMode"
+        type="warning"
+        :icon="Edit"
         circle
-        @click="handleCart"
+        @click="handleEditGame"
       />
+      <div v-else>
+        <el-button
+          :type="addedToCart ? 'info' : 'success'"
+          :icon="addedToCart ? Remove : ShoppingCart"
+          circle
+          @click="handleCart"
+        />
+        <el-tooltip
+          :disabled="!noMoney"
+          class="box-item"
+          effect="dark"
+          content="余额不足！"
+          placement="top"
+        >
+          <el-button
+            class="buy-game-button"
+            :disabled="noMoney"
+            type="warning"
+            :icon="WalletFilled"
+            circle
+            @click="handleBuyGame"
+          />
+        </el-tooltip>
+      </div>
     </div>
+    <el-tag v-else class="actions already-have" type="success">已拥有</el-tag>
   </el-card>
 </template>
 
 <script setup lang="ts">
-import { Edit, ShoppingCart } from "@element-plus/icons-vue";
+import { computed } from "vue";
+import {
+  Edit,
+  ShoppingCart,
+  WalletFilled,
+  Remove,
+} from "@element-plus/icons-vue";
 
 import router from "../../../../router";
 import { getGamePoster } from "../../../../utilities";
 import PriceLabel from "../../../Common/PriceLabel.vue";
 import { useGameListStates } from "../../../../store/gameListStates";
+import { useGameCart } from "../../../../store/gameCart";
+import { useCurrentUser } from "../../../../store/currentUser";
 
-const emit = defineEmits(["onManageGame"]);
 const states = useGameListStates();
-const props = defineProps(["game"]);
+const currentUser = useCurrentUser();
+const gameCart = useGameCart();
+const emit = defineEmits(["onManageGame"]);
+const props = defineProps(["game", "showList"]);
 
-const handleEditGame = () => {
-  emit("onManageGame", props.game);
-};
+const showList = computed(() => !states.viewChart || props.showList);
+const addedToCart = computed(() =>
+  gameCart.cart.some(({ id }) => id === props.game.id)
+);
+const noMoney = computed(
+  () => currentUser.accountBalance < props.game.discountedPrice
+);
 
-const handleClickCard = () => {
+const handleEditGame = () => emit("onManageGame", props.game);
+
+const redirectToGameDetails = () => {
   if (states.manageMode) handleEditGame();
   else router.push(`game?id=${props.game.id}`);
 };
 
 const handleCart = (e: Event) => {
+  if (states.manageMode) handleEditGame();
   e.stopPropagation();
-  console.log("购物车");
+  const game = { ...props.game };
+  if (addedToCart.value) gameCart.removeFromCart(game);
+  else gameCart.addToCart(game);
+};
+
+const handleBuyGame = (e: Event) => {
+  e.stopPropagation();
+  gameCart.setSingleGame({ ...props.game });
 };
 </script>
 
@@ -94,7 +144,6 @@ const handleCart = (e: Event) => {
 }
 .text {
   text-align: start;
-  color: #fff;
   flex: 1;
   text-wrap: nowrap;
 }
@@ -118,5 +167,6 @@ const handleCart = (e: Event) => {
 .actions {
   text-align: end;
   margin-top: auto;
+  margin-bottom: 0.25rem;
 }
 </style>

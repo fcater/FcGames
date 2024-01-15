@@ -1,7 +1,7 @@
 import { GAME_CATEGORIES } from "../constants/gameCategories";
 
 export interface Game {
-  id?: string;
+  id?: number;
   title: string;
   description: string;
   categories: GAME_CATEGORIES | null;
@@ -13,7 +13,7 @@ export interface Game {
 }
 
 export const defaultEmptyGame: Game = {
-  id: "",
+  id: 0,
   title: "",
   description: "",
   poster: "",

@@ -34,7 +34,6 @@
         {{ states.manageMode ? "退出" : "管理游戏" }}
       </p>
     </el-button>
-    <!-- <el-icon><ShoppingBag /></el-icon> -->
   </div>
 </template>
 
@@ -67,8 +66,8 @@ const handleSearchKeydown = (e: KeyboardEvent) => {
   position: sticky;
   top: -1px;
   z-index: 999;
+  user-select: none;
 }
-
 .search {
   width: 16rem;
   background: black;

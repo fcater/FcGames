@@ -4,9 +4,9 @@ import { Game } from "../../types";
 import { GAME_CATEGORIES } from "../../constants/gameCategories";
 import { getCategoriesValue } from "../../utilities";
 
-const GAMES: Game[] = [
+export const GAMES: Game[] = [
   {
-    id: "1",
+    id: 1,
     title: "超级马里奥：奥德赛",
     poster: "",
     description:
@@ -17,7 +17,7 @@ const GAMES: Game[] = [
     discountedPrice: 0.0,
   },
   {
-    id: "2",
+    id: 2,
     title: "赛博朋克 2077",
     poster: "poster/mockPoster.jpg",
     description:
@@ -26,6 +26,16 @@ const GAMES: Game[] = [
     price: 500,
     discount: 0.9,
     discountedPrice: 50,
+  },
+  {
+    id: 3,
+    title: "舞力全开2024",
+    poster: "",
+    description: "一起跳舞吧！",
+    categories: GAME_CATEGORIES.MUSIC,
+    price: 500,
+    discount: 1,
+    discountedPrice: 0,
   },
 ];
 
@@ -40,36 +50,39 @@ const CATEGORIES = [
 ];
 
 export const gameHandlers = [
-  http.get(BASE_URL.API + "api/games", ({ request }) => {
-    const categories = new URL(request.url).searchParams.get("categories");
-    if (categories) {
-      const filteredGames = GAMES.filter((g) => {
-        return g.categories === getCategoriesValue(categories);
-      });
-      return HttpResponse.json(filteredGames);
-    } else return HttpResponse.json(GAMES);
-  }),
-  http.get(BASE_URL.API + "api/games", ({ request }) => {
-    const categories = new URL(request.url).searchParams.get("categories");
-    const filteredGames = GAMES.filter((g) => g.categories === categories);
-    return HttpResponse.json(categories ? filteredGames : GAMES);
-  }),
-  http.get(BASE_URL.API + "api/game/:id", ({ params }) => {
-    const game = GAMES.find(({ id }) => id === params.id);
-    return HttpResponse.json(game);
-  }),
-  http.get(BASE_URL.API + "api/games/categories", () =>
+  http.get(BASE_URL.API + "api/game/categories", () =>
     HttpResponse.json(CATEGORIES)
   ),
-  http.post(BASE_URL.API + "api/games/add", async ({ request }) => {
+  http.get(BASE_URL.API + "api/game", ({ request }) => {
+    const query = new URL(request.url).searchParams;
+    const categories = query.get("categories");
+    const titleLike = query.get("titleLike") || "";
+
+    let filteredGames = GAMES;
+    if (categories) {
+      filteredGames = filteredGames.filter((g) => {
+        return g?.categories === getCategoriesValue(categories);
+      });
+    }
+    if (titleLike) {
+      filteredGames = filteredGames.filter((g) => g?.title.includes(titleLike));
+    }
+    return HttpResponse.json(filteredGames);
+  }),
+  http.get(BASE_URL.API + "api/game/:id", ({ params }) => {
+    const game = GAMES.find(({ id }) => id === Number(params.id));
+    return HttpResponse.json(game);
+  }),
+
+  http.post(BASE_URL.API + "api/game/add", async ({ request }) => {
     const game = (await request.json()) as Game;
-    game.id = Date.now().toString(36);
+    game.id = GAMES.length + 1;
     game.discountedPrice = (game.price * (100 - game.discount * 100)) / 100;
     GAMES.push(game);
     return HttpResponse.json("添加成功");
   }),
   http.patch(BASE_URL.API + "api/game/:id", async ({ params, request }) => {
-    const origin = GAMES.find(({ id }) => id === params.id);
+    const origin = GAMES.find(({ id }) => id === Number(params.id));
     const game = (await request.json()) as Game;
     game.discountedPrice = (game.price * (100 - game.discount * 100)) / 100;
     if (origin) {
@@ -80,7 +93,7 @@ export const gameHandlers = [
     return HttpResponse.json("更新成功");
   }),
   http.delete(BASE_URL.API + "api/game/:id", ({ params }) => {
-    const index = GAMES.findIndex(({ id }) => id === params.id);
+    const index = GAMES.findIndex(({ id }) => id === Number(params.id));
     if (index !== -1) GAMES.splice(index, 1);
     return HttpResponse.json("删除成功");
   }),
