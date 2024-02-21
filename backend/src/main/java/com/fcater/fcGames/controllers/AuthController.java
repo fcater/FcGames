@@ -26,17 +26,19 @@ public class AuthController {
         var query = userMapper.selectOne(lambdaQuery(User.class).eq(User::getUsername, user.getUsername()));
         var success = query != null && query.getPassword().equals(user.getPassword());
 
-        return success
-                ? ResponseEntity.ok(Auth.generateToken(new UserDTO(query)))
-                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
+        return success ? ResponseEntity.ok(Auth.generateToken(new UserDTO(query))) : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@NotNull @RequestBody User user) {
         var query = userMapper.selectOne(lambdaQuery(User.class).eq(User::getUsername, user.getUsername()));
-        return query != null
-                ? ResponseEntity.status(HttpStatus.CONFLICT).body("用户名已存在")
-                : userController.createUser(user);
+        if (query != null) return ResponseEntity.status(HttpStatus.CONFLICT).body("用户名已存在");
+        else {
+            var newUser = userController.createUser(user);
+            return newUser != null
+                    ? ResponseEntity.ok(Auth.generateToken(newUser))
+                    : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("用户创建失败");
+        }
     }
 
     @GetMapping("/api/parseToken")

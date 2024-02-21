@@ -103,7 +103,10 @@ const redirectToGameDetails = () => {
 };
 
 const handleCart = (e: Event) => {
-  if (states.manageMode) handleEditGame();
+  if (states.manageMode) {
+    handleEditGame();
+    return;
+  }
   e.stopPropagation();
   const game = { ...props.game };
   if (addedToCart.value) gameCart.removeFromCart(game);
@@ -158,11 +161,14 @@ const handleBuyGame = (e: Event) => {
   margin-left: auto;
 }
 .description {
-  flex: 5;
+  flex: 4.5;
   height: 100%;
   text-align: start;
   padding-top: 0.25rem;
   padding-left: 0.25rem;
+}
+.description:hover {
+  color: #888;
 }
 .actions {
   text-align: end;

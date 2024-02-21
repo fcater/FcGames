@@ -3,6 +3,7 @@ import { HttpResponse, http } from "msw";
 import { ADMIN, USER } from "./auth";
 import { User } from "../../types";
 import BASE_URL from "../../constants/baseURL";
+import authService from "../../services/authService";
 
 const USERS = [
   ADMIN,
@@ -17,6 +18,14 @@ const USERS = [
 ];
 
 export const userHandlers = [
+  http.get(BASE_URL.API + "api/user/:id", () => {
+    switch (authService.getJwt()) {
+      case "mockAdminToken":
+        return HttpResponse.json(ADMIN);
+      default:
+        return HttpResponse.json(USER);
+    }
+  }),
   http.get(BASE_URL.API + "api/user", () => HttpResponse.json(USERS)),
   http.patch(BASE_URL.API + "api/user/:id", async ({ params, request }) => {
     const body = (await request.json()) as User;

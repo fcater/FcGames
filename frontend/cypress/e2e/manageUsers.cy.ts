@@ -1,9 +1,10 @@
-describe("manageUsers", () => {
+describe("manage users", () => {
   beforeEach(() => {
     cy.visit("/");
     cy.get("#username").type("admin");
     cy.get("#password").type("admin");
     cy.get(".login").click();
+    cy.get(".header").should("exist");
     cy.visit("/#/users");
   });
 

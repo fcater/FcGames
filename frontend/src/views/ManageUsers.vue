@@ -21,10 +21,12 @@ import { onMounted, ref } from "vue";
 
 import { User } from "../types";
 import httpService from "../services/httpService";
+import { useCurrentUser } from "../store/currentUser";
 import DeleteDialog from "../components/ManageUsers/DeleteDialog.vue";
 import RechargeDialog from "../components/ManageUsers/RechargeDialog.vue";
 import UsersTable from "../components/ManageUsers/UsersTable.vue";
 
+const currentUser = useCurrentUser();
 const users = ref<User[] | null>(null);
 const deleteUser = ref<User | null>(null);
 const rechargeUser = ref<User | null>(null);
@@ -37,6 +39,7 @@ const fetchUsers = () => {
     .get("api/user")
     .then(({ data }) => (users.value = data))
     .catch((error) => console.error("获取失败:", error));
+  currentUser.fetchUser();
 };
 
 onMounted(() => fetchUsers());

@@ -75,7 +75,8 @@ const props = defineProps(["game", "isAddMode"]);
 const states = useGameListStates();
 
 let form: Game = reactive<Game>({ ...props.game } || defaultEmptyGame);
-form.discount *= 100;
+if (!form.discount) form.discount = 0;
+else form.discount *= 100;
 
 watchEffect(() => {
   form.categories = form.categories || states.category;

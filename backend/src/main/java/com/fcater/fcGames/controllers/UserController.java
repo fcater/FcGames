@@ -35,12 +35,10 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<?> createUser(@NotNull User user) {
+    public UserDTO createUser(@NotNull User user) {
         user.setIsAdmin(getAllUsers().isEmpty());
         var i = userMapper.insert(user);
-        return i > 0
-                ? ResponseEntity.ok(new UserDTO(user))
-                : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("用户创建失败");
+        return i > 0 ? new UserDTO(user) : null;
     }
 
     @PatchMapping("/user/{id}")

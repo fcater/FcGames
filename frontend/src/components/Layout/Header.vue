@@ -60,7 +60,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <el-button @click="currentUser.fetchUser()" type="primary">下载</el-button>
+    <el-button @click="handleDownload" type="primary">下载</el-button>
   </header>
 </template>
 
@@ -108,6 +108,8 @@ const handleBuyAll = () => {
     .then(success)
     .catch((err) => (error.value = err));
 };
+
+const handleDownload = () => window.open("https://github.com/fcater/FcGames");
 </script>
 
 <style scoped>

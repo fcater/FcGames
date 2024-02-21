@@ -17,8 +17,10 @@ export const useCurrentUser = defineStore({
     async fetchUser() {
       if (authService.getJwt()) {
         const { data: user } = await httpService.get("/api/parseToken");
+        const { data: newUser } = await httpService.get(`/api/user/${user.id}`);
         const { data } = await httpService.get(`/api/userGames/${user.id}`);
-        this.$patch({ ...user, games: data.map((g: Game) => g.id) });
+
+        this.$patch({ ...user, ...newUser, games: data.map((g) => g.id) });
       }
     },
   },

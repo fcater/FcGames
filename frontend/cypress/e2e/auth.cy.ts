@@ -8,11 +8,11 @@ describe("auth", () => {
       cy.url().should("include", "/login");
     });
 
-    it("should redirect to /home when non-admin go to /manageUsers", () => {
+    it("should redirect to /home when non-admin go to manage users", () => {
       cy.get("#username").type("fcater");
       cy.get("#password").type("fcater");
       cy.get(".login").click();
-      cy.visit("/#/manageUsers");
+      cy.visit("/#/users");
       cy.url().should("include", "/home");
     });
   });
